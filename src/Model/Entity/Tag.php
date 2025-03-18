@@ -6,7 +6,6 @@ namespace App\Model\Entity;
 
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Gedmo\Mapping\Annotation\Slug;
@@ -18,7 +17,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class Tag
 {
     #[Id]
-    #[GeneratedValue]
     #[Column]
     private ?int $id = null;
 
@@ -36,6 +34,13 @@ class Tag
         return $this->id;
     }
 
+    public function setId(int $id): Tag
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getCode(): string
     {
         return $this->code;
@@ -49,6 +54,7 @@ class Tag
     public function setName(string $name): Tag
     {
         $this->name = $name;
+
         return $this;
     }
 }

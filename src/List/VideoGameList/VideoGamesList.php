@@ -8,22 +8,20 @@ use App\Doctrine\Repository\VideoGameRepository;
 use App\Form\FilterType;
 use App\Model\Entity\VideoGame;
 use App\Model\ValueObject\Page;
-use Countable;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use IteratorAggregate;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Traversable;
 
 /**
  * @implements IteratorAggregate<VideoGame>
  */
-final class VideoGamesList implements Countable, IteratorAggregate
+final class VideoGamesList implements \Countable, \IteratorAggregate
 {
     private FormView $form;
-    
+
     private Filter $filter;
 
     /**
@@ -31,28 +29,35 @@ final class VideoGamesList implements Countable, IteratorAggregate
      */
     private Paginator $data;
 
+    /**
+     * @var string
+     */
     private string $route;
 
+    /**
+     * @var array<mixed>
+     */
     private array $routeParameters;
 
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private FormFactoryInterface $formFactory,
         private VideoGameRepository $videoGameRepository,
-        private Pagination  $pagination,
-    ) {
-    }
+        private Pagination $pagination,
+    ) {}
 
     public function getForm(): FormView
     {
         return $this->form;
     }
 
-      public function handleRequest(Request $request): self
+    public function handleRequest(Request $request): self
     {
         $this->filter = new Filter();
 
-        $this->route = $request->attributes->get('_route');
+        if (is_string($request->attributes->get('_route'))) {
+            $this->route = $request->attributes->get('_route');
+        }
         $this->routeParameters = $request->query->all();
 
         $this->form = $this->formFactory
@@ -142,7 +147,7 @@ final class VideoGamesList implements Countable, IteratorAggregate
         return $this->pagination;
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
         return $this->data;
     }
