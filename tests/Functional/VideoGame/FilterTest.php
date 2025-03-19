@@ -27,7 +27,9 @@ final class FilterTest extends FunctionalTestCase
         self::assertSelectorCount(1, 'article.game-card');
     }
 
-    // Filtrage des tags.
+    /**
+     * @return iterable
+     */
     public function providerTag(): iterable
     {
         yield 'Aucun tag' => [[]];

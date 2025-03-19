@@ -61,9 +61,6 @@ final class Pagination implements \IteratorAggregate, \Countable
         return $this;
     }
 
-    /**
-     * @return \Traversable<string, int>
-     */
     public function getIterator(): \Traversable
     {
         if (!$this->initialized) {
@@ -73,6 +70,9 @@ final class Pagination implements \IteratorAggregate, \Countable
         return new \ArrayIterator($this->pages);
     }
 
+    /**
+     * @return Info
+     */
     public function getInfo(): Info
     {
         if (!$this->initialized) {
@@ -130,6 +130,9 @@ final class Pagination implements \IteratorAggregate, \Countable
         ];
     }
 
+    /**
+     * @return integer
+     */
     public function count(): int
     {
         return $this->getLastPage();

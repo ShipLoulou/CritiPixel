@@ -12,6 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @template-extends AbstractType<mixed>
+ */
 final class RegisterType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver): void

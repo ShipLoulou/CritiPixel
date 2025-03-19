@@ -56,7 +56,7 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
             $selectedUsers = [];
 
             for ($i = 0; $i < random_int(3, 7); ++$i) {
-                $selectedUsers[] = $users[random_int(0, 9)];
+                $selectedUsers[] = $users[random_int(1, 9)];
             }
 
             foreach ($selectedUsers as $user) {

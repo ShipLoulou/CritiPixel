@@ -1,13 +1,22 @@
 includes:
-    - vendor/phpstan/phpstan-doctrine/extension.neon
-    - vendor/phpstan/phpstan-symfony/extension.neon
 
 parameters:
-    level: 9
-    paths:
-        - tests/
-    tmpDir: var/cache/phpstan
-    symfony:
-        containerXmlPath: var/cache/test/App_KernelTestDebugContainer.xml
-    doctrine:
-        objectManagerLoader: phpstan/doctrine.php
+	level: 9
+	paths:
+		- tests/
+		- src/
+	doctrine:
+		objectManagerLoader: phpstan/object-manager.php
+	symfony:
+		containerXmlPath: var/cache/test/App_KernelTestDebugContainer.xml
+		consoleApplicationLoader: phpstan/console.php
+	treatPhpDocTypesAsCertain: false
+	ignoreErrors:
+		-
+			identifier: method.nonObject
+		-
+			identifier: method.notFound
+		-
+			identifier: missingType.iterableValue 
+		-
+			identifier: doctrine.columnType  

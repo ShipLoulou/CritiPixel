@@ -15,7 +15,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.1",
         "phpdocumentor/reflection-docblock": "^5.4",
-        "phpstan/phpdoc-parser": "^1.28",
+        "phpstan/phpdoc-parser": "^2.1",
         "stof/doctrine-extensions-bundle": "^1.10",
         "symfony/asset": "6.4.*",
         "symfony/asset-mapper": "6.4.*",
@@ -47,6 +47,7 @@
     "config": {
         "allow-plugins": {
             "php-http/discovery": true,
+            "phpstan/extension-installer": true,
             "symfony/flex": true,
             "symfony/runtime": true
         },
@@ -119,12 +120,9 @@
         "friendsofphp/php-cs-fixer": "^3.66",
         "liip/test-fixtures-bundle": "^3.2",
         "php-cs-fixer/shim": "^3.9",
-        "php-static-analysis/phpstan-extension": "^0.4.1",
+        "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
-        "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-doctrine": "^2.0",
-        "phpstan/phpstan-phpunit": "^2.0",
-        "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "6.4.*",

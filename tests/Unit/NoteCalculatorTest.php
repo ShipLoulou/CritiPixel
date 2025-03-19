@@ -12,7 +12,7 @@ class NoteCalculatorTest extends TestCase
     /**
      * Création d'une entité VideoGame
      * 
-     * @param integer ...$rating - Tableau avec un ensemble de note
+     * @param integer ...$ratings - Tableau avec un ensemble de note
      * @return VideoGame
      */
     private static function createVideoGame(int ...$ratings): VideoGame

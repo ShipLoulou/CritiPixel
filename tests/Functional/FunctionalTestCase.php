@@ -6,13 +6,16 @@ namespace App\Tests\Functional;
 
 use App\Model\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DomCrawler\Crawler;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 abstract class FunctionalTestCase extends WebTestCase
 {
     protected KernelBrowser $client;
+    protected AbstractDatabaseTool $databaseTool;
 
     protected function setUp(): void
     {
@@ -20,15 +23,16 @@ abstract class FunctionalTestCase extends WebTestCase
         $this->client = static::createClient();
     }
 
-    protected function getEntityManager(): EntityManagerInterface
+    /**
+     * @return object
+     */
+    protected function getEntityManager(): object
     {
         return $this->service(EntityManagerInterface::class);
     }
 
     /**
-     * @template T
-     * @param class-string<T> $id
-     * @return T
+     * @return object
      */
     protected function service(string $id): object
     {

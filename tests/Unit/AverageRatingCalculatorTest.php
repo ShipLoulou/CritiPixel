@@ -12,7 +12,7 @@ class AverageRatingCalculatorTest extends TestCase
     /**
      * Création d'une entité VideoGame
      * 
-     * @param integer ...$rating - Tableau avec un ensemble de note
+     * @param int ...$ratings - Tableau avec un ensemble de note
      * @return VideoGame
      */
     private static function createVideoGame(int ...$ratings): VideoGame
