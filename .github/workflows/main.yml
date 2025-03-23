@@ -23,9 +23,20 @@ jobs:
       - name: Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Build
+      - name: Build and Start Containers
+        run: docker compose -f "docker-compose.yml" up -d --build
+      
+      - name: Wait for Database to be ready
         run: |
-          docker compose -f "docker-compose.yml" up -d --build
+          echo "Waiting for PostgreSQL to accept connections..."
+          for i in {1..30}; do
+            docker exec $(docker ps -qf "ancestor=postgres:16-alpine") pg_isready -U postgres && break
+            echo "Postgres not ready yet..."
+            sleep 1
+          done
+      
+      - name: Symfony setup and migration
+        run: |
           composer install
           php bin/console doctrine:database:drop -f --if-exists --env=test
           php bin/console doctrine:database:create --env=test
