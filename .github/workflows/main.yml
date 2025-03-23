@@ -6,10 +6,11 @@ on:
 jobs:
   ci:
     name: Continuous Integration
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.operating-system }}
     strategy:
       fail-fast: false
       matrix:
+        operating-system: [ubuntu-latest]
         php-versions: ['8.2', '8.3']
     steps:
       - name: Checkout
@@ -23,12 +24,6 @@ jobs:
       - name: Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache composer dependencies
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
       - name: Build
         run: |
           docker compose -f "docker-compose.yml" up -d --build
