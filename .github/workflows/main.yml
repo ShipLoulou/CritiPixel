@@ -1,4 +1,5 @@
-name: Intergration continue
+name: Integration Continue
+
 on:
   push:
     branches: [ publish ]
@@ -11,39 +12,58 @@ jobs:
       fail-fast: false
       matrix:
         php-versions: ['8.2', '8.3']
+    services:
+      postgres:
+        image: postgres:16-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres?serverVersion=16&charset=utf8"
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
-      - name: Setup PHP, with composer and extensions
+
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: mbstring, xml, ctype, iconv, intl
-          tools: castor
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Build and Start Containers
-        run: docker compose -f "docker-compose.yml" up -d --build
-      
-      - name: Wait for Database to be ready
+          tools: composer
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Wait for PostgreSQL
         run: |
-          echo "Waiting for PostgreSQL to accept connections..."
-          for i in {1..30}; do
-            docker exec $(docker ps -qf "ancestor=postgres:16-alpine") pg_isready -U postgres && break
-            echo "Postgres not ready yet..."
-            sleep 1
+          echo "Waiting for PostgreSQL to be ready..."
+          for i in {1..10}; do
+            nc -z localhost 5432 && echo "PostgreSQL is up!" && break
+            echo "Waiting..."
+            sleep 3
           done
-      
-      - name: Symfony setup and migration
+
+      - name: Prepare database
         run: |
-          composer install
-          php bin/console doctrine:database:drop -f --if-exists --env=test
+          php bin/console doctrine:database:drop --force --if-exists --env=test
           php bin/console doctrine:database:create --env=test
           php bin/console doctrine:migrations:migrate -n --env=test
           php bin/console doctrine:fixtures:load -n --purge-with-truncate --env=test
-          php bin/console sass:build
-      - name: Tests
+
+      - name: Build assets
+        run: php bin/console sass:build
+
+      - name: Run tests
         run: php bin/phpunit
-      - name: Analysis
+
+      - name: Static analysis
         run: php vendor/bin/phpstan
