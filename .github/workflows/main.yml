@@ -5,26 +5,30 @@ on:
 
 jobs:
   ci:
-    name: Continuous Integration
-    runs-on: ${{ matrix.operating-system }}
+    runs-on: ubunto-lastest
     strategy:
       fail-fast: false
       matrix:
-        operating-system: [ubuntu-latest]
-        php-versions: ['8.2', '8.3']
-    steps:
+        php-versions: ['8.2']
+
+    steps: 
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: mbstring, xml, ctype, iconv, intl
-          tools: castor
+        env: 
+          update: true
+
       - name: Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Build
+  
+
+      - name : Build
         run: |
           docker compose -f "docker-compose.yml" up -d --build
           composer install
@@ -33,7 +37,9 @@ jobs:
           php bin/console doctrine:migrations:migrate -n --env=test
           php bin/console doctrine:fixtures:load -n --purge-with-truncate --env=test
           php bin/console sass:build
+          
       - name: Tests
         run: php bin/phpunit
+        
       - name: Analysis
         run: php vendor/bin/phpstan
