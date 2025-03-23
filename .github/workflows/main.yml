@@ -2,14 +2,14 @@ name: Intergration continue
 on:
   push:
     branches: [ publish ]
+
 jobs:
   ci:
     name: Continuous Integration
-    runs-on: ${{ matrix.operating-system }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        operating-system: [ubuntu-latest]
         php-versions: ['8.2', '8.3']
     steps:
       - name: Checkout
